@@ -9,13 +9,14 @@ from queue import Queue
 from time import sleep
 from sys import platform
 
+from dnd_lookup import query_open5e_for_keywords
 from keywords import find_keywords
 from socket_instance import socketio
 
 stop_flag = threading.Event()
 
 class WhisperTranscriber:
-    def __init__(self, model="medium", non_english=False, energy_threshold=1000, record_timeout=2.0, phrase_timeout=1.0):
+    def __init__(self, model="medium", non_english=False, energy_threshold=1000, record_timeout=2, phrase_timeout=2):
         """
         Initialize the transcriber with configurable parameters.
         """
@@ -100,6 +101,9 @@ class WhisperTranscriber:
                     print(f"[Transcribed Text]: {text}")
                     keywords = find_keywords(text)
                     print(f"[Keywords]: {keywords}")
+                    item_list = query_open5e_for_keywords(keywords)
+                    print(f"Emitting items: {item_list}")  # Debugging output
+                    socketio.emit("item_update", {"items": item_list})
 
                     if phrase_complete:
                         self.transcript.append(text)

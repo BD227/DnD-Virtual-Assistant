@@ -1,7 +1,8 @@
+from collections import defaultdict
 import json
 import os
+import string
 import requests
-from fuzzywuzzy import fuzz
 
 
 KEYWORDS_FILE = "keywords.json"
@@ -12,13 +13,23 @@ def fetch_keywords():
     data = {"spells": [], "magicitems": []}
 
     for endpoint in ["spells", "magicitems"]:
+        print(f"Fetching {endpoint}...")
         url = f"{BASE_URL}/{endpoint}/"
         while url:
             response = requests.get(url)
             if response.status_code == 200:
+                print("Response received!")
                 result = response.json()
-                # Extract only the 'name' field for keywords
-                items = [item.get('name') for item in result.get('results', [])]
+                # Extract 'name' and 'slug' fields for lookup
+                items = [
+                    {
+                        "name": item.get('name'),
+                        "slug": item.get('slug')
+                    }
+                    for item in result.get('results', [])
+                    if 'name' in item and 'slug' in item
+                ]
+
                 data[endpoint].extend(items)
                 url = result.get('next')
             else:
@@ -44,38 +55,68 @@ def get_keywords():
     keywords = load_keywords_from_file()
 
     if keywords:
+        print("Keywords found locally")
         return keywords
 
     print("Keywords not found locally, fetching from Open5e API...")
     keywords = fetch_keywords()
+    print("Keywords Fetched!")
+    #keywords = deduplicate_keywords(keywords)
+    #print("Deduplication complete!")
 
     if keywords:
         save_keywords_to_file(keywords)
     else:
         print("Failed to fetch keywords from the Open5e API.")
     return keywords
+
+def deduplicate_keywords(keywords):
+    """
+    Deduplicate keywords in each category of the dictionary.
+    """
+    seen = set()
+    deduplicated = {}
+    for category, keyword_list in keywords.items():
+        deduplicated[category] = []
+        for item in keyword_list:
+            identifier = item.get("name")
+            if identifier not in seen:
+                seen.add(identifier)
+                deduplicated[category].append(item)
+    return deduplicated
     
 
-def find_keywords(text, threshold=85):
+def find_keywords(text):
     """
     Finds keywords in the given text using fuzzy matching.
     Only matches if the similarity score is greater than the threshold.
     """
     if not text:
-        return []
+        return defaultdict(list)
 
     keywords = get_keywords()
     if not keywords:
         raise ValueError("Keywords cannot be None or empty.")
 
-    found_keywords = []
-    text_lower = text.lower()
+    found_keywords = defaultdict(list)
+    print("Processing text")
+    text = preprocess_text(text)
 
     for category, keyword_list in keywords.items():
         for keyword in keyword_list:
-            similarity = fuzz.partial_ratio(keyword.lower(), text_lower)
-            if similarity >= threshold:
-                found_keywords.append(keyword)
+            name = preprocess_text(keyword['name'])
+            if name in text:
+                found_keywords[category].append(keyword)
+    
+    # Deduplicate results in the found_keywords dictionary
+    #print("Deduplicating keywords")
+    #deduplicate_keywords(found_keywords)
 
     # Deduplicate the found keywords
-    return list(set(found_keywords))
+    return found_keywords
+
+def preprocess_text(text):
+    """
+    Strip spaces and punctuation from a string and convert to lowercase.
+    """
+    return ''.join(char for char in text if char not in string.punctuation).replace(" ", "").lower()

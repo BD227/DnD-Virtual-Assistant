@@ -20,6 +20,7 @@ const Transcription: React.FC = () => {
 
         // Listen for transcription updates
         socket.on('transcription_update', (data: { transcription: string[]}) => {
+            console.log("Received Transcription!");
             if(data && data.transcription){
                 setTranscription(data.transcription);
             }
