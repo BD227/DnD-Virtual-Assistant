@@ -1,0 +1,65 @@
+# Node.js / React
+node_modules/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React production build
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Flask / Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+instance/
+.venv/
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Flask-related
+*.sqlite3
+
+# Jupyter Notebook files
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# PyCharm settings
+.idea/
+
+# Logs
+*.log
+
+# Python dependency directories
+Pipfile.lock
+poetry.lock
+
+# Other
+*.swp
+*.swo
+
+# Ignore all local environment variables files (be sure not to track sensitive data)
+.env
+.env.*
+
+# Coverage directory used by pytest
+.coverage
+.coverage.*
+
+# pytest cache
+.pytest_cache/
+
+# Flask Migrations
+migrations/
