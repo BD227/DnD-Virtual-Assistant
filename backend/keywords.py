@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+from fuzzywuzzy import fuzz
 
 
 KEYWORDS_FILE = "keywords.json"
@@ -42,12 +43,39 @@ def get_keywords():
     """Fetch or load keywords when starting the server."""
     keywords = load_keywords_from_file()
 
-    if not keywords:
-        print("Keywords not found locally, fetching from Open5e API...")
-        keywords = fetch_keywords()
+    if keywords:
+        return keywords
 
-        if keywords:
-            save_keywords_to_file(keywords)
-            return keywords
-        else:
-            print("Failed to fetch keywords from the Open5e API.")
+    print("Keywords not found locally, fetching from Open5e API...")
+    keywords = fetch_keywords()
+
+    if keywords:
+        save_keywords_to_file(keywords)
+    else:
+        print("Failed to fetch keywords from the Open5e API.")
+    return keywords
+    
+
+def find_keywords(text, threshold=85):
+    """
+    Finds keywords in the given text using fuzzy matching.
+    Only matches if the similarity score is greater than the threshold.
+    """
+    if not text:
+        return []
+
+    keywords = get_keywords()
+    if not keywords:
+        raise ValueError("Keywords cannot be None or empty.")
+
+    found_keywords = []
+    text_lower = text.lower()
+
+    for category, keyword_list in keywords.items():
+        for keyword in keyword_list:
+            similarity = fuzz.partial_ratio(keyword.lower(), text_lower)
+            if similarity >= threshold:
+                found_keywords.append(keyword)
+
+    # Deduplicate the found keywords
+    return list(set(found_keywords))

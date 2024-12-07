@@ -1,5 +1,4 @@
 import argparse
-import os
 import threading
 import numpy as np
 import speech_recognition as sr
@@ -9,6 +8,9 @@ from datetime import datetime, timedelta
 from queue import Queue
 from time import sleep
 from sys import platform
+
+from keywords import find_keywords
+from socket_instance import socketio
 
 stop_flag = threading.Event()
 
@@ -23,7 +25,7 @@ class WhisperTranscriber:
         self.record_timeout = record_timeout
         self.phrase_timeout = phrase_timeout
         self.data_queue = Queue()
-        self.transcription = ['']
+        self.transcript = ['']
         self.phrase_time = None
         self.audio_model = None
         self.recorder = sr.Recognizer()
@@ -93,27 +95,41 @@ class WhisperTranscriber:
                     audio_np = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
                     result = self.audio_model.transcribe(audio_np, fp16=torch.cuda.is_available())
                     text = result['text'].strip()
-                    print(f"[Transcribed Text]: {text}")  # Debug log to see transcriptions
+                    if not text:
+                        continue
+                    print(f"[Transcribed Text]: {text}")
+                    keywords = find_keywords(text)
+                    print(f"[Keywords]: {keywords}")
 
                     if phrase_complete:
-                        self.transcription.append(text)
+                        self.transcript.append(text)
+                        self.send_transcript()
                     else:
-                        self.transcription[-1] = text
-
-                    #os.system('cls' if os.name == 'nt' else 'clear')
-                    #for line in self.transcription:
-                        #print(line)
-                    #print('', end='', flush=True)
+                        self.transcript[-1] = text
                 else:
                     sleep(0.25)
             except Exception as e:
                 print(f"[Error in _process_queue]: {e}")
 
+    def send_transcript(self):
+        """
+        Continuously process the transcription queue and emit updates via WebSocket.
+        """
+        try:
+            if self.transcript:
+                #print(f"Sending to frontend: {self.transcript}")  # Debug log
+                socketio.emit("transcription_update", {"transcription": self.transcript})  # Send updates to the frontend
+        except Exception as e:
+            print(f"[Error in send_transcriptions]: {e}")
+
     def get_transcription(self):
         """
         Get the complete transcription as a list of strings.
         """
-        return self.transcription
+        return self.transcript
+    
+    def stop_transcription():
+        stop_flag.set()
 
 
 if __name__ == "__main__":
