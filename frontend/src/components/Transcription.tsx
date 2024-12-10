@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSocket } from '../context/SocketContext.tsx';
+import './Transcription.css';
 
 const Transcription: React.FC = () => {
     const socket = useSocket();
@@ -32,14 +33,24 @@ const Transcription: React.FC = () => {
         };
     }, [socket]);
 
+    useEffect(() => {
+        const transcriptionContainer = document.querySelector(".live-transcription");
+        if (transcriptionContainer) {
+          transcriptionContainer.scrollTop = transcriptionContainer.scrollHeight;
+        }
+      }, [transcription]); // Runs whenever transcription updates
+      
+
     return (
-        <div>
-            <h1>Live Transcription</h1>
+        <div className="live-transcription-container">
+            <h2>Live Transcription</h2>
+            <div className="live-transcription">
+                <div style={{ whiteSpace: 'pre-wrap' }}>
+                    <p>{transcription.join(' ')}</p>
+                </div>
+            </div>
             <button onClick={startTranscription}>Start Transcription</button>
             <button onClick={stopTranscription}>Stop Transcription</button>
-            <div style={{ whiteSpace: 'pre-wrap' }}>
-                <p>{transcription.join(' ')}</p>
-            </div>
         </div>
     );
 };

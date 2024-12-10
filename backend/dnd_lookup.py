@@ -1,3 +1,4 @@
+import uuid
 import requests
 
 def query_open5e(category, keyword):
@@ -33,15 +34,32 @@ def query_open5e_for_keywords(found_keywords):
                 data = trimData(data,category)
                 results.append(data)
 
-    print(f"Query Complete: {results}")
+    print(f"Query Complete.")
     return results
 
 def trimData(data, category):
-    return {
-        "category": category,
-        "name": data['name'],
-        "desc": data['desc'],
+    category_mapping = {
+        "spells": "Spell",
+        "magicitems": "Magic Item"
     }
+    return {
+        "id": str(uuid.uuid4()),
+        "category": category_mapping[category],
+        "name": data.get("name"),
+        "desc": data.get("desc"),
+        # Spells
+        "higher_level": data.get("higher_level"),
+        "range": data.get("range"),
+        "duration": data.get("duration"),
+        "requires_concentration": data.get("requires_concentration"),
+        "casting_time": data.get("casting_time"),
+        "level": data.get("level"),
+        # Magic Items
+        "type": data.get("type"),
+        "rarity": data.get("rarity"),
+        "requires_attunement": data.get("requires_attunement")
+    }
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,79 @@
+/* Card Container */
+/* Container for all cards */
+.items-container {
+    height:calc(100vh - 100px);
+    gap: 8px;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  .item-card {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 8px 8px 8px 8px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  /* Card Hover Effect */
+  .item-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .item-name {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .item-category {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+    color: #666;
+  }
+  
+  .item-description {
+    font-size: 14px;
+    color: #555;
+    padding-top: 8px;
+    line-height: 1.5;
+    font-weight: 300;
+    white-space: "pre-line";
+  }
+  
+  .item-details {
+  display: block;
+  overflow-wrap: break-word;
+  margin-top: 16px;
+}
+
+.pill {
+  background-color: #e0f7fa;
+  color: #00796b;
+  padding: 8px 12px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 12px;
+  display: inline-block;
+  margin-right: 8px; /* Adds spacing to the right of each pill */
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+  

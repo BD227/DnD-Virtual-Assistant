@@ -9,11 +9,13 @@ from queue import Queue
 from time import sleep
 from sys import platform
 
+from names import query_names, try_create_name_url
 from dnd_lookup import query_open5e_for_keywords
 from keywords import find_keywords
 from socket_instance import socketio
 
 stop_flag = threading.Event()
+MAX_ENTRIES = 50
 
 class WhisperTranscriber:
     def __init__(self, model="medium", non_english=False, energy_threshold=1000, record_timeout=2, phrase_timeout=2):
@@ -98,12 +100,8 @@ class WhisperTranscriber:
                     text = result['text'].strip()
                     if not text:
                         continue
-                    print(f"[Transcribed Text]: {text}")
-                    keywords = find_keywords(text)
-                    print(f"[Keywords]: {keywords}")
-                    item_list = query_open5e_for_keywords(keywords)
-                    print(f"Emitting items: {item_list}")  # Debugging output
-                    socketio.emit("item_update", {"items": item_list})
+
+                    self.process_text_for_keywords(text)
 
                     if phrase_complete:
                         self.transcript.append(text)
@@ -115,12 +113,40 @@ class WhisperTranscriber:
             except Exception as e:
                 print(f"[Error in _process_queue]: {e}")
 
+    def process_text_for_keywords(self, text):
+        if not text:
+            return
+        print(f"[Transcribed Text]: {text}")
+        # Handle D&D Keywords
+        keywords = find_keywords(text)
+        print(f"[Keywords]: {keywords}")
+        item_list = query_open5e_for_keywords(keywords)
+        if item_list:
+            print(f"Emitting items: {item_list}")  # Debugging output
+            socketio.emit("item_update", {"items": item_list})
+        # Handle Name Keywords
+        url, race, type = try_create_name_url(text)
+        if url:
+            data = query_names(url)
+            if data:
+                name_list = data.get("names")
+                if name_list:
+                    print(f"Emitting items: {name_list}")  # Debugging output
+                    if type == "tavern":
+                        category = type
+                    else:
+                        category = race + ", " + type
+                    socketio.emit("name_update", {"category": category, "names": name_list})
+
     def send_transcript(self):
         """
         Continuously process the transcription queue and emit updates via WebSocket.
         """
         try:
             if self.transcript:
+                print(f"Transcript Length: {len(self.transcript)}")
+                if len(self.transcript) > MAX_ENTRIES:
+                    self.transcript = self.transcript[-MAX_ENTRIES:]
                 #print(f"Sending to frontend: {self.transcript}")  # Debug log
                 socketio.emit("transcription_update", {"transcription": self.transcript})  # Send updates to the frontend
         except Exception as e:
@@ -132,8 +158,9 @@ class WhisperTranscriber:
         """
         return self.transcript
     
-    def stop_transcription():
+    def stop_transcription(self):
         stop_flag.set()
+        print("Recording Stopped.")
 
 
 if __name__ == "__main__":

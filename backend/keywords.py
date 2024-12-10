@@ -27,7 +27,7 @@ def fetch_keywords():
                         "slug": item.get('slug')
                     }
                     for item in result.get('results', [])
-                    if 'name' in item and 'slug' in item
+                    if 'name' in item and 'slug' in item and 'a5e' not in item.get('slug')
                 ]
 
                 data[endpoint].extend(items)

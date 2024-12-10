@@ -1,0 +1,36 @@
+.references-container {
+    gap: 8px;
+    justify-content: center;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+  }
+  
+  .reference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .reference-name {
+    font-weight: bold;
+  }
+  
+  .reference-category {
+    color: #6c757d;
+  }
+  
+  .remove-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  .remove-button:hover {
+    background-color: #c82333;
+  }
+  

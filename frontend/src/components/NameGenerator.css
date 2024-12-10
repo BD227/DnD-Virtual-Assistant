@@ -1,0 +1,98 @@
+.name-generator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    height: 55%;
+  }
+  
+  .category-selector {
+    display: block;
+    width: 100%; /* Matches the container width */
+    max-width: 600px; /* Same width as the name grid container */
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    appearance: none; /* Hides the default dropdown arrow */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .category-selector:hover {
+    border-color: #007bff; /* Optional: Highlight border on hover */
+  }
+  
+  .category-selector:focus {
+    border-color: #007bff; /* Blue border on focus */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Subtle focus glow */
+  }
+  
+  .category-selector::placeholder {
+    color: #aaa; /* Placeholder text color */
+  }
+  
+  .category-selector-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .category-selector-container::after {
+    content: '▼'; /* Custom dropdown arrow */
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Arrow won't block clicks */
+    font-size: 12px;
+    color: #666;
+  }
+  
+
+.name-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    width: 100%;
+    max-width: 600px; /* Aligns with selector */
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.name-card {
+    padding: 6px;
+    margin-bottom: 8px;
+    margin-right: 3px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+.generate-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .generate-button:hover {
+    background-color: #0056b3;
+  }
+  

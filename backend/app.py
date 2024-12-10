@@ -1,4 +1,7 @@
 from flask import Flask
+from names import query_names, try_create_name_url
+from dnd_lookup import query_open5e_for_keywords
+from keywords import find_keywords
 from socket_instance import socketio
 from transcription import WhisperTranscriber  # Import your transcriber class
 import threading
@@ -42,6 +45,33 @@ def stop_transcription():
         socketio.emit("status", {"message": "Transcription stopped"})
     else:
         socketio.emit("status", {"message": "No transcription is running"})
+
+@socketio.on("submit_search")
+def submit_search(text):
+    """
+    Submit a keyword
+    """
+    keywords = find_keywords(text.get("searchTerm"))
+    print(f"[Keywords]: {keywords}")
+    item_list = query_open5e_for_keywords(keywords)
+    if item_list:
+        print(f"Emitting items: {item_list}")  # Debugging output
+        socketio.emit("item_update", {"items": item_list})
+
+@socketio.on("generate_names")
+def submit_search(request):
+    """
+    Submit a keyword
+    """
+    category = request.get("category")
+    print(f"Category Received: {category}")
+    url, race, type = try_create_name_url(category)
+    print(url)
+    data = query_names(url)
+    name_list = data.get("names")
+    if name_list:
+        print(f"Emitting items: {name_list}")  # Debugging output
+        socketio.emit("name_update", {"category": "", "names": name_list})
 
 
 if __name__ == "__main__":

@@ -1,0 +1,15 @@
+.live-transcription-container {
+    height: 40%;
+}
+.live-transcription {
+    grid-area: right;
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-y: auto;
+    height: 70%;
+  }
+
+h2 {
+    margin-top: 0px;
+}
+  
