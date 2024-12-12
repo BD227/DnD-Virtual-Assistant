@@ -1,7 +1,7 @@
 from flask import Flask
 from names import query_names, try_create_name_url
 from dnd_lookup import query_open5e_for_keywords
-from keywords import find_keywords
+from keywords import find_keywords, get_keywords
 from socket_instance import socketio
 from transcription import WhisperTranscriber  # Import your transcriber class
 import threading
@@ -19,15 +19,14 @@ def index():
 
 @socketio.on("start_transcription")
 def start_transcription(data):
-    """
-    Start the transcription process when the frontend sends a 'start_transcription' event.
-    """
-    global transcriber
+    global transcriber, transcription_running
+
     if not transcriber:
         transcriber = WhisperTranscriber(model=data.get("model", "base"))
         transcriber.load_model()
         transcriber.start_transcription()
-        # Run the transcription process in a separate thread to keep Flask responsive
+
+        transcription_running = True  # Set transcription status
         socketio.emit("status", {"message": "Transcription started"})
     else:
         socketio.emit("status", {"message": "Transcription is already running"})
@@ -35,16 +34,39 @@ def start_transcription(data):
 
 @socketio.on("stop_transcription")
 def stop_transcription():
-    """
-    Stop the transcription process when the frontend sends a 'stop_transcription' event.
-    """
-    global transcriber
+    global transcriber, transcription_running
+
     if transcriber:
         transcriber.stop_transcription()
         transcriber = None
+        transcription_running = False  # Update transcription status
         socketio.emit("status", {"message": "Transcription stopped"})
     else:
         socketio.emit("status", {"message": "No transcription is running"})
+
+@socketio.on('get_suggestions')
+def handle_get_suggestions(data):
+    query = data.get('query', '').lower()
+    matches = []
+    max_suggestions = 5  # Define the maximum number of suggestions
+    keywords = get_keywords()  # Dictionary with string keys and list values
+
+    # Iterate over the dictionary values (lists of keywords)
+    for category in keywords.values():
+        for keyword in category:
+            # Ensure 'keyword' contains a 'name' key and it matches the query
+            if keyword.get("name") and keyword.get("name").lower().startswith(query):
+                matches.append(keyword.get("name"))
+                print("Matched on " + keyword.get("name"))
+
+                # Check if we have reached the limit of suggestions
+                if len(matches) >= max_suggestions:
+                    break
+        if len(matches) >= max_suggestions:
+            break
+
+    # Emit the matches back to the client
+    socketio.emit('suggestions', matches)
 
 @socketio.on("submit_search")
 def submit_search(text):

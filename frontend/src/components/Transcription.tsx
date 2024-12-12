@@ -5,24 +5,26 @@ import './Transcription.css';
 const Transcription: React.FC = () => {
     const socket = useSocket();
     const [transcription, setTranscription] = useState<string[]>([]);
+    const [isTranscribing, setIsTranscribing] = useState(false);  // New state to track transcription status
 
-    const startTranscription = () => {
-        // Emit the 'start_transcription' event to the backend
-        socket.emit("start_transcription", { model: "medium" });
-      };
-    
-      const stopTranscription = () => {
-        // Emit the 'stop_transcription' event to the backend
-        socket.emit("stop_transcription");
-      };
+    const toggleTranscription = () => {
+        if (isTranscribing) {
+            // Stop transcription
+            socket.emit("stop_transcription");
+        } else {
+            // Start transcription
+            socket.emit("start_transcription", { model: "medium" });
+        }
+        setIsTranscribing(!isTranscribing);  // Toggle transcription state
+    };
 
     useEffect(() => {
         if (!socket) return;
 
         // Listen for transcription updates
-        socket.on('transcription_update', (data: { transcription: string[]}) => {
+        socket.on('transcription_update', (data: { transcription: string[] }) => {
             console.log("Received Transcription!");
-            if(data && data.transcription){
+            if (data && data.transcription) {
                 setTranscription(data.transcription);
             }
         });
@@ -36,10 +38,9 @@ const Transcription: React.FC = () => {
     useEffect(() => {
         const transcriptionContainer = document.querySelector(".live-transcription");
         if (transcriptionContainer) {
-          transcriptionContainer.scrollTop = transcriptionContainer.scrollHeight;
+            transcriptionContainer.scrollTop = transcriptionContainer.scrollHeight;
         }
-      }, [transcription]); // Runs whenever transcription updates
-      
+    }, [transcription]);
 
     return (
         <div className="live-transcription-container">
@@ -49,8 +50,11 @@ const Transcription: React.FC = () => {
                     <p>{transcription.join(' ')}</p>
                 </div>
             </div>
-            <button onClick={startTranscription}>Start Transcription</button>
-            <button onClick={stopTranscription}>Stop Transcription</button>
+
+            {/* Single button to toggle transcription */}
+            <button onClick={toggleTranscription} className="transcription-button">
+                {isTranscribing ? 'Stop Transcription' : 'Start Transcription'}
+            </button>
         </div>
     );
 };

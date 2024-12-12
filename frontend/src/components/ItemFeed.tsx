@@ -4,19 +4,36 @@ import ItemCard from "./ItemCard.tsx";
 import "./ItemFeed.css";
 
 interface Item {
-    id: string;
-    category: string;
-    name: string;
-    desc?: string;
-    higher_level?: string;
-    range?: string;
-    duration?: string;
-    requires_concentration?: boolean;
-    casting_time?: string;
-    level?: string;
-    type?: string;
-    rarity?: string;
-    requires_attunement?: string;
+  id: string;
+  category: string;
+  name: string;
+  desc?: string;
+  // Spells
+  higher_level?: string;
+  range?: string;
+  duration?: string;
+  requires_concentration?: boolean;
+  casting_time?: string;
+  level?: string;
+  // Magic Items
+  type?: string;
+  rarity?: string;
+  requires_attunement?: string;
+  // Monsters
+  size?: string;
+  armor_class?: string,
+  // Feats
+  benefits?: string[],
+  // Races
+  traits?: string[],
+  // Weapons
+  is_melee?: boolean,
+  damage_dice?: string,
+  is_two_handed?: boolean
+  // Armor
+  ac_display?: string,
+  grants_stealth_disadvantage?: boolean,
+  strength_score_required?: number
 }
 
 interface ItemFeedProps {
@@ -57,7 +74,7 @@ const ItemFeed: React.FC<ItemFeedProps> = ({ saveItem }) => {
                         item={item}
                         isExpanded={!!expandedItems[item.id]}
                         toggleSeeMore={() => toggleSeeMore(item.id)}
-                        onClick={() => saveItem(item)}
+                        onDoubleClick={() => saveItem(item)}
                     />
                 ))
             ) : (

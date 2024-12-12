@@ -13,10 +13,10 @@
     max-width: 600px; /* Same width as the name grid container */
     padding: 10px 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #2E2E2E;
     border-radius: 8px;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
     appearance: none; /* Hides the default dropdown arrow */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: left;
@@ -25,16 +25,15 @@
   }
   
   .category-selector:hover {
-    border-color: #007bff; /* Optional: Highlight border on hover */
+    border-color: #888; /* Optional: Highlight border on hover */
   }
   
   .category-selector:focus {
-    border-color: #007bff; /* Blue border on focus */
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Subtle focus glow */
+    border-color: #888; /* Blue border on focus */
   }
   
   .category-selector::placeholder {
-    color: #aaa; /* Placeholder text color */
+    color: #E0E0E0; /* Placeholder text color */
   }
   
   .category-selector-container {
@@ -70,10 +69,10 @@
     padding: 6px;
     margin-bottom: 8px;
     margin-right: 3px;
-    border: 1px solid #ddd;
+    border: 1px solid #2E2E2E;
     border-radius: 8px;
     text-align: center;
-    background-color: #f9f9f9;
+    background-color: #1E1E1E;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-size: 14px;
 }
@@ -83,8 +82,8 @@
     padding: 10px;
     font-size: 16px;
     font-weight: bold;
-    color: white;
-    background-color: #007bff;
+    color: #E0E0E0;
+    background-color: #6200EA;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -93,6 +92,6 @@
   }
   
   .generate-button:hover {
-    background-color: #0056b3;
+    background-color: #3700B3;
   }
   

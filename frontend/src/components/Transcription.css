@@ -3,13 +3,34 @@
 }
 .live-transcription {
     grid-area: right;
-    border: 1px solid #ccc;
+    border: 1px solid #2E2E2E;
     padding: 10px;
     overflow-y: auto;
-    height: 70%;
+    height: 60%;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
   }
 
 h2 {
     margin-top: 0px;
+}
+
+.transcription-button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #E0E0E0;
+    background-color: #6200EA;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+  
+.transcription-button:hover {
+    background-color: #3700B3;
 }
   

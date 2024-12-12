@@ -43,7 +43,7 @@ const References: React.FC<ReferencesProps> = ({ savedItems, removeItem }) => {
                         item={item}
                         isExpanded={!!expandedItems[item.id]} // Always expanded in references
                         toggleSeeMore={() => toggleSeeMore(item.id)}
-                        onClick={() => removeItem(item.id)}
+                        onDoubleClick={() => removeItem(item.id)}
                     />
                 ))
             ) : (

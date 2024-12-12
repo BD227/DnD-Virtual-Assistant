@@ -22,7 +22,7 @@ const categories = [
 
 const NameGenerator: React.FC = () => {
     const socket = useSocket();
-    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+    const [selectedCategory, setSelectedCategory] = useState('Tavern');
     const [names, setNames] = useState<string[]>([]);
 
     const fetchNames = async (category: string) => {
@@ -32,6 +32,8 @@ const NameGenerator: React.FC = () => {
 
     useEffect(() => {
         if (!socket) return;
+
+        fetchNames(selectedCategory);
 
         socket.on("name_update", (data: { category: string, names: string[] }) => {
             console.log("Received items:", data.names);

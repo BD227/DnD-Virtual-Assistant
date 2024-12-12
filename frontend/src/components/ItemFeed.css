@@ -11,12 +11,12 @@
     display: flex;
     flex-direction: column;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #2E2E2E;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 8px 8px 8px 8px;
     box-sizing: border-box;
-    background-color: #f9f9f9;
+    background-color: #1E1E1E;
     overflow: hidden;
     position: relative;
     display: grid;
@@ -38,19 +38,19 @@
   .item-name {
     font-weight: bold;
     font-size: 18px;
-    color: #333;
+    color: #E0E0E0;
   }
   
   .item-category {
     font-weight: bold;
     font-size: 16px;
     text-align: right;
-    color: #666;
+    color: #B0B0B0;
   }
   
   .item-description {
     font-size: 14px;
-    color: #555;
+    color: #E0E0E0;
     padding-top: 8px;
     line-height: 1.5;
     font-weight: 300;
@@ -64,8 +64,8 @@
 }
 
 .pill {
-  background-color: #e0f7fa;
-  color: #00796b;
+  background-color: #6200EA;
+  color: #E0E0E0;
   padding: 8px 12px;
   border-radius: 50px;
   font-weight: bold;
@@ -74,6 +74,10 @@
   margin-right: 8px; /* Adds spacing to the right of each pill */
   margin-bottom: 8px;
   white-space: nowrap;
+}
+
+a {
+  color: #BB86FC;
 }
 
   
