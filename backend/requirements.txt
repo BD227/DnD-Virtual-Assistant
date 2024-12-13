@@ -5,3 +5,7 @@ whisper
 pydub
 sounddevice
 numpy
+argparse
+speechrecognition
+torch
+openai-whisper
