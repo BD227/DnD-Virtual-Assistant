@@ -1,5 +1,4 @@
 # DnD-Virtual-Assistant
-<<<<<<< HEAD
 ## Overview
 An app which will enhance your D&amp;D session by listening for keywords such as spells, items, rules, etc. and then displaying details about those keywords on a dashboard to save you time looking them up. Below is a full list of included categories.
 * Spells
